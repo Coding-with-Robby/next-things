@@ -17,8 +17,7 @@ test:
     - npm run test
   only:
     - merge_requests
-    - Test
-
+    - setup-ci-cd
 deploy:
   stage: deploy
   image: docker:20.10.7
