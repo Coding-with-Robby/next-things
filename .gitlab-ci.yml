@@ -1,0 +1,33 @@
+stages:
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  image: node:18
+  script:
+    - npm install
+    - npm run test
+  only:
+    - merge_requests
+    - Test
+
+deploy:
+  stage: deploy
+  image: docker:20.10.7
+  services:
+    - docker:20.10.7-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - apk add --no-cache bash
+  script:
+    - bash deploy.sh
+  only:
+    - main
